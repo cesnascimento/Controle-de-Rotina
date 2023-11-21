@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  backend_db:
+    container_name: controle_rotina_db
+    image: postgres
+    environment:
+      POSTGRES_DB: controle_rotina_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - backend_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend_net
+    restart: unless-stopped
+
+networks:
+  backend_net:
+    driver: bridge
+
+volumes:
+  backend_db_data:

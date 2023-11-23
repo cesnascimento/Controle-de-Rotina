@@ -1,4 +1,4 @@
-{% extends 'adminlte/base.html' %}
+{% extends 'base.html' %}
 {% load bootstrap4 %}
 
 
@@ -8,9 +8,11 @@
     <div class="card-title">Cadastro de usuário</div>
   </div>
   <div class="card-body">
-    {% csrf_token %}
-    {% bootstrap_form form_usuario %}
-    <button class="btn btn-primary" type="submit">Salvar</button>
+    <form method="POST">
+      {% csrf_token %} 
+      {% bootstrap_form form_usuario %}
+      <button class="btn btn-primary" type="submit">Salvar</button>
+    </form>
   </div>
 </div>
 {% endblock content %}

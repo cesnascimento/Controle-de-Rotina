@@ -1,9 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from user_control.models import CustomUser
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth import get_user_model
 
-class UsuarioForm(UserCreationForm):
-
+class CadastroUsuarioForm(UserCreationForm):
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
         user.is_superuser = True
@@ -13,5 +12,16 @@ class UsuarioForm(UserCreationForm):
         return user
 
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
-        fields = ('fullname', 'email' ,'password1', 'password2')
+        model = get_user_model()
+        fields = ['fullname', 'email' ,'password1', 'password2']
+        labels = {'fullname': 'Nome'}
+ 
+
+class EditarUsuarioForm(UserChangeForm):
+    password = None
+
+    class Meta:
+        model = get_user_model()
+        fields = ['fullname', 'email']
+        labels = {'fullname': 'Nome'}
+

@@ -11,7 +11,7 @@ services:
     volumes:
       - backend_db_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5434:5432"
     networks:
       - backend_net
     restart: unless-stopped

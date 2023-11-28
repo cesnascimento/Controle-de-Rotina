@@ -1,7 +1,16 @@
-from .models import CustomUser
+from .models import CustomUser, UserActivities
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms.usuario_forms import CadastroUsuarioForm, EditarUsuarioForm
 from django.contrib.auth import get_user_model
+
+
+def add_user_activity(user, action):
+  UserActivities.objects.create(
+      user_id=user.id,
+      email=user.email,
+      fullname=user.fullname,
+      action=action
+)
 
 # Create your views here.
 def cadastrar_usuario(request):
@@ -37,5 +46,3 @@ def deletar_usuario(request, id):
   usuario = User.objects.get(id=id)
   usuario.delete()
   return redirect('listar_usuarios')
-
- 

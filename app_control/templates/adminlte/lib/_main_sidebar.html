@@ -22,4 +22,33 @@ Links de navegação
             <p>Usuários</p>
         </a>
     </li>
+    <li class="nav-item has-tree-view ">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-object-group"></i> <p>Serviços</p>
+            <p><i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview menu-open">
+                <li class="nav-item">
+                        <a href="{% url 'listar_rotina' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Rotinas
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'list_descricao_relatorio' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Descrição de Atividade
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'list_setor' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Setor
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'list_responsavel' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Responsável
+                        </a>
+                </li>
+        </ul>
+    </li>
 {% endblock nav_links %} 

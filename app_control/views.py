@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms.app_forms import RotinaForm, DescricaoRelatorioForm
-from .models import Rotina, Descricao_relatorio
+from .forms.app_forms import RotinaForm, DescricaoRelatorioForm, SetorForm, ResponsavelForm
+from .models import Rotina, Descricao_relatorio, Setor, Responsavel
+
+# Rotina
 
 
 def add_rotina(request):
@@ -8,7 +10,7 @@ def add_rotina(request):
         form = RotinaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('url_para_lista_de_rotinas')  # Substitua pela URL desejada
+            return redirect('listar_rotina')
     else:
         form = RotinaForm()
 
@@ -21,7 +23,7 @@ def edit_rotina(request, id):
         form = RotinaForm(request.POST, instance=rotina)
         if form.is_valid():
             form.save()
-            return redirect('url_para_lista_de_rotinas')
+            return redirect('listar_rotina')
     else:
         form = RotinaForm(instance=rotina)
 
@@ -31,7 +33,14 @@ def edit_rotina(request, id):
 def delete_rotina(request, id):
     rotina = get_object_or_404(Rotina, id=id)
     rotina.delete()
-    return redirect('url_para_lista_de_rotinas')
+    return redirect('listar_rotina')
+
+
+def listar_rotina(request):
+    rotinas = Rotina.objects.all()
+    return render(request, 'app/list_rotina.html', {'rotinas': rotinas})
+
+# Descrição de Relatorio
 
 
 def add_descricao_relatorio(request):
@@ -47,22 +56,99 @@ def add_descricao_relatorio(request):
         form_descricao_relatorio = DescricaoRelatorioForm()
         form_descricao_relatorio.fields['description'].label = "Descrição de Relatório"
 
-
     return render(request, 'app/add_descricao_relatorio.html', {'form_descricao_relatorio': form_descricao_relatorio})
 
 
 def edit_descricao_relatorio(request, id):
     descricao_relatorio = Descricao_relatorio.objects.get(id=id)
     if request.method == 'POST':
-        form_descricao_relatorio = DescricaoRelatorioForm(request.POST, instance=descricao_relatorio)
+        form_descricao_relatorio = DescricaoRelatorioForm(
+            request.POST, instance=descricao_relatorio)
         if form_descricao_relatorio.is_valid():
             form_descricao_relatorio.save()
             return redirect('list_descricao_relatorio')
     else:
-        form_descricao_relatorio = DescricaoRelatorioForm(instance=descricao_relatorio)
+        form_descricao_relatorio = DescricaoRelatorioForm(
+            instance=descricao_relatorio)
 
     return render(request, 'app/add_descricao_relatorio.html', {'form_descricao_relatorio': form_descricao_relatorio, 'descricao_relatorio': descricao_relatorio})
+
 
 def list_descricao_relatorio(request):
     descricoes = Descricao_relatorio.objects.all()
     return render(request, 'app/list_descricao_relatorio.html', {'descricoes': descricoes})
+
+# Setor
+
+
+def add_setor(request):
+    if request.method == 'POST':
+        form = SetorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('url_para_lista_de_rotinas')
+    else:
+        form = SetorForm()
+
+    return render(request, 'app/add_or_edit_setor.html', {'form': form})
+
+
+def edit_setor(request, id):
+    setor = Setor.objects.get(id=id)
+    if request.method == 'POST':
+        form = SetorForm(request.POST, instance=setor)
+        if form.is_valid():
+            form.save()
+            return redirect('')
+    else:
+        form = SetorForm(instance=setor)
+
+    return render(request, 'app/add_or_edit_setor.html', {'form': form})
+
+
+def list_setor(request):
+    setores = Setor.objects.all()
+    return render(request, 'app/list_setor.html', {'setores': setores})
+
+
+def delete_setor(request, id):
+    setor = get_object_or_404(Setor, id=id)
+    setor.delete()
+    return redirect('list_setor')
+
+# Responsavel
+
+
+def add_responsavel(request):
+    if request.method == 'POST':
+        form = ResponsavelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_responsavel')
+    else:
+        form = ResponsavelForm()
+
+    return render(request, 'app/add_or_edit_responsavel.html', {'form': form})
+
+
+def edit_responsavel(request, id):
+    responsavel = Responsavel.objects.get(id=id)
+    if request.method == 'POST':
+        form = ResponsavelForm(request.POST, instance=responsavel)
+        if form.is_valid():
+            return redirect('')
+    else:
+        form = ResponsavelForm(instantece=responsavel)
+
+    return render(request, 'app/add_or_edit_setor.html', {'form': form})
+
+
+def list_responsavel(request):
+    responsaveis = Responsavel.objects.all()
+    return render(request, 'app/list_responsavel.html', {'responsaveis': responsaveis})
+
+
+def delete_responsavel(request, id):
+    responsavel = get_object_or_404(Responsavel, id=id)
+    responsavel.delete()
+    return redirect('list_responsavel')

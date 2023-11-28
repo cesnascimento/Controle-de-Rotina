@@ -1,5 +1,6 @@
 from django import forms
-from ..models import Rotina, Descricao_relatorio
+from ..models import Rotina, Descricao_relatorio, Setor, Responsavel
+
 
 class DescricaoRelatorioForm(forms.ModelForm):
     class Meta:
@@ -15,6 +16,20 @@ class EditarDescricaoRelatorioForm(forms.ModelForm):
         labels = {'description': 'Descrição de Relatório'}
 
 
+class SetorForm(forms.ModelForm):
+    class Meta:
+        model = Setor
+        fields = ['sector']
+        labels = {'sector': 'Setor'}
+
+
+class ResponsavelForm(forms.ModelForm):
+    class Meta:
+        model = Responsavel
+        fields = ['name']
+        labels = {'name': 'Nome'}
+
+
 class RotinaForm(forms.ModelForm):
     class Meta:
         model = Rotina
@@ -24,4 +39,3 @@ class RotinaForm(forms.ModelForm):
             'responsavel': 'Responsável',
             'situacao': 'Situação',
         }
-

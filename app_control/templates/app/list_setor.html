@@ -4,23 +4,23 @@
 {% block content %}
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Lista de descrição do relátorio</h3>
+        <h3 class="card-title">Lista de Setores</h3>
     </div>
     <div class="card-body p-0">
         <table class="table table-condensed">
             <thead>
                 <tr>
-                    <th>Descrição de Relatório</th>
+                    <th>Setor</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                {% for descricao in descricoes %}
+                {% for setor in setores %}
                     <tr>
-                        <td>{{descricao.description}}</td>                        
+                        <td>{{setor.sector}}</td>                        
                         <td>
-                            <a href="{% url 'edit_descricao_relatorio' descricao.id %}" class="mr-5"><i class="fa fa-cog"></i></a>
-                            <a href="#"><i class="fa fa-trash"></i></a>
+                            <a href="{% url 'edit_setor' setor.id %}" class="mr-5"><i class="fa fa-cog"></i></a>
+                            <a href="{% url 'delete_setor' setor.id %}"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -29,5 +29,5 @@
     </div>
 
 </div>
-<a href="{% url 'add_descricao_relatorio' %}" class="btn btn-primary">Cadastrar</a>
+<a href="{% url 'add_setor' %}" class="btn btn-primary">Cadastrar</a>
 {% endblock content %}

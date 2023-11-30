@@ -11,10 +11,9 @@
             <thead>
                 <tr>
                     <th>Descrição do relatório</th>
-                    <th>Prazos</th>
+                    <th>Prazo</th>
                     <th>Setor</th>
                     <th>Responsável</th>
-                    <th>Situação</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -22,13 +21,12 @@
                 {% for rotina in rotinas %}
                     <tr>
                         <td>{{rotina.descricao_relatorio}}</td>                        
-                        <td>{{rotina.descricao_relatorio}}</td>                        
+                        <td>{{rotina.prazo}}</td>                        
                         <td>{{rotina.setor}}</td>                        
-                        <td>{{rotina.responsavel}}</td>                        
-                        <td>{{rotina.situacao}}</td>                        
+                        <td>{{rotina.responsavel.fullname}}</td>                        
                         <td>
                             <a href="{% url 'edit_rotina' rotina.id %}" class="mr-5"><i class="fa fa-cog"></i></a>
-                            <a href="#"><i class="fa fa-trash"></i></a>
+                            <a href="{% url 'delete_rotina' rotina.id %}"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

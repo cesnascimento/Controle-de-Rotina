@@ -11,7 +11,7 @@ Links de navegação
 {%endblock nav_heading%}
 {% block nav_links %}
     <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a href="{% url 'minhas_rotinas' %}" class="nav-link">
             <i class="nav-icon fa fa-cog"></i> 
             <p>Rotina</p>
         </a>
@@ -31,7 +31,7 @@ Links de navegação
         <ul class="nav nav-treeview menu-open">
                 <li class="nav-item">
                         <a href="{% url 'listar_rotina' %}" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i> Rotinas
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Rotina
                         </a>
                 </li>
                 <li class="nav-item">
@@ -41,14 +41,14 @@ Links de navegação
                 </li>
                 <li class="nav-item">
                         <a href="{% url 'list_setor' %}" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i> Setor
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Setor
                         </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                         <a href="{% url 'list_responsavel' %}" class="nav-link">
                             <i class="nav-icon fas fa-circle"></i> Responsável
                         </a>
-                </li>
+                </li> -->
         </ul>
     </li>
 {% endblock nav_links %} 

@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms.app_forms import RotinaForm, DescricaoRelatorioForm, SetorForm, ResponsavelForm
-from .models import Rotina, Descricao_relatorio, Setor, Responsavel
+from .forms.app_forms import AtualizarStatusRotinaForm, RotinaForm, DescricaoRelatorioForm, SetorForm, ResponsavelForm
+from .models import Rotina, Descricao_relatorio, Setor, Responsavel, StatusDiarioRotina
+from django.utils import timezone
 
 # Rotina
 
@@ -39,6 +40,52 @@ def delete_rotina(request, id):
 def listar_rotina(request):
     rotinas = Rotina.objects.all()
     return render(request, 'app/list_rotina.html', {'rotinas': rotinas})
+
+
+""" def minhas_rotinas(request):
+    rotinas = Rotina.objects.all()
+    return render(request, 'app/minhas_rotinas.html', {'rotinas': rotinas}) """
+
+def atualizar_status_rotina(request, pk):
+    rotina = get_object_or_404(Rotina, pk=pk, responsavel=request.user)
+    data_atual = timezone.now().date()
+
+    # Obter o último status para a data atual, se existir
+    ultimo_status = StatusDiarioRotina.objects.filter(rotina=rotina, data=data_atual).order_by('-id').first()
+
+    if request.method == 'POST':
+        form = AtualizarStatusRotinaForm(request.POST)
+        if form.is_valid():
+            # Criar um novo registro de status diário
+            novo_status = form.save(commit=False)
+            novo_status.rotina = rotina
+            novo_status.data = data_atual
+            novo_status.usuario = request.user
+            novo_status.save()
+
+            # Opcional: Atualizar o status na tabela Rotina
+            rotina.status = novo_status.status
+            rotina.save()
+            return redirect('minhas_rotinas')
+    else:
+        # Inicializar o formulário com o último status, se existir
+        form = AtualizarStatusRotinaForm(instance=ultimo_status)
+
+    return render(request, 'app/atualizar_status_rotina.html', {'form': form, 'rotina': rotina})
+
+
+def minhas_rotinas(request):
+    data_atual = timezone.now().date()
+    rotinas = Rotina.objects.filter(responsavel=request.user)
+    status = StatusDiarioRotina.objects.filter(rotina__in=rotinas, data=data_atual)
+    # Adicionar lógica para outras periodicidades se necessário
+    return render(request, 'app/minhas_rotinas.html',
+        {
+        'rotinas': rotinas, 
+        'status_diarios': status}
+    )
+
+
 
 # Descrição de Relatorio
 
@@ -86,7 +133,7 @@ def add_setor(request):
         form = SetorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('url_para_lista_de_rotinas')
+            return redirect('list_setor')
     else:
         form = SetorForm()
 

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="container mt-4">
+  {% for rotina in rotinas %}
+    <div class="card mb-3">
+      <div class="card-header">
+        <h2 class="card-title">{{ rotina.descricao_relatorio }}</h2>
+      </div>
+      <div class="card-body">
+        <p>Setor: {{ rotina.setor }}</p>
+        <p>Prazo: {{ rotina.get_prazo_display }}</p>
+        <p>Status: <span class="badge badge-secondary">{{ rotina.get_status_display }}</span></p>
+        <!-- Outros detalhes da rotina -->
+        
+        <!-- Botão para atualizar o status -->
+        <a href="{% url 'atualizar_status_rotina' rotina.id %}" class="btn btn-primary">Atualizar Status</a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="alert alert-info">Nenhuma rotina atribuída a você.</div>
+  {% endfor %}
+</div>
+{% endblock content %}

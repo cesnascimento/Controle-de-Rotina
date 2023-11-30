@@ -1,5 +1,7 @@
 from django import forms
-from ..models import Rotina, Descricao_relatorio, Setor, Responsavel
+from user_control.models import CustomUser
+from ..models import Rotina, Descricao_relatorio, Setor, Responsavel, StatusDiarioRotina
+from django.forms import ModelChoiceField, Select
 
 
 class DescricaoRelatorioForm(forms.ModelForm):
@@ -30,12 +32,24 @@ class ResponsavelForm(forms.ModelForm):
         labels = {'name': 'Nome'}
 
 
+class CustomUserChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.fullname
+
+
 class RotinaForm(forms.ModelForm):
+    responsavel = CustomUserChoiceField(queryset=CustomUser.objects.all())
+
     class Meta:
         model = Rotina
-        fields = ['descricao_relatorio', 'setor', 'responsavel', 'situacao']
+        fields = ['descricao_relatorio', 'prazo', 'setor', 'responsavel']
         labels = {
             'descricao_relatorio': 'Descrição de Relatório',
             'responsavel': 'Responsável',
-            'situacao': 'Situação',
         }
+
+
+class AtualizarStatusRotinaForm(forms.ModelForm):
+    class Meta:
+        model = StatusDiarioRotina
+        fields = ['status']

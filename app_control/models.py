@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from user_control.models import CustomUser
 from user_control.views import add_user_activity
@@ -96,20 +97,44 @@ class Responsavel(models.Model):
 class Rotina(models.Model):
 
     SITUACOES = (
-        ('prevista', 'Prevista'),
-        ('realizada', 'Realizada'),
-        ('fora_do_prazo', 'Fora do Prazo'),
+        ('Diário', 'Diário'),
+        ('Segunda-Feira', 'Segunda-Feira'),
+        ('Terça-feira', 'Terça-feira'),
+        ('Quarta-Feira', 'Quarta-Feira'),
+        ('Quinta-Feira', 'Quinta-Feira'),
+        ('Sexta-Feira', 'Sexta-Feira'),
+        ('5° Dia Util', '5° Dia Util'),
+    )
+    STATUS_CHOICES = (
+        ('PENDENTE', 'Pendente'),
+        ('REALIZADO_PRAZO', 'Realizado no Prazo'),
+        ('PREVISAO_EXECUCAO', 'Previsão de Execução'),
+        ('REALIZADO_FORA_PRAZO', 'Realizado Fora do Prazo'),
+        ('INVENTARIO_GERAL', 'Inventário Geral'),
+        ('JUSTIFICADO', 'Justificado'),
     )
 
     created_by = models.ForeignKey(
         CustomUser, null=True, related_name="inventory_groups", on_delete=models.SET_NULL)
     descricao_relatorio = models.ForeignKey(
         Descricao_relatorio, on_delete=models.CASCADE, related_name='rotinas')
+    prazo = models.CharField(
+        max_length=15, choices=SITUACOES, default='Diário')
     setor = models.ForeignKey(
         Setor, on_delete=models.CASCADE, related_name='setor')
     responsavel = models.ForeignKey(
-        Responsavel, on_delete=models.CASCADE, related_name='responsavel')
-    situacao = models.CharField(
-        max_length=15, choices=SITUACOES, default='prevista')
+        CustomUser, on_delete=models.CASCADE, related_name='responsavel')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDENTE')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class StatusDiarioRotina(models.Model):
+    rotina = models.ForeignKey(Rotina, on_delete=models.CASCADE, related_name='status_diarios')
+    data = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=20, choices=Rotina.STATUS_CHOICES, default='PENDENTE')
+    usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    
+    
+    def __str__(self):
+        return f"{self.rotina.descricao_relatorio} - {self.data} - {self.status}"

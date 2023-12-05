@@ -1,7 +1,8 @@
 from django import forms
 from user_control.models import CustomUser
-from ..models import Rotina, Descricao_relatorio, Setor, Responsavel, StatusDiarioRotina
-from django.forms import ModelChoiceField, Select
+from ..models import Rotina, Descricao_relatorio, StatusDiarioRotina
+from django.forms import ModelChoiceField
+from django.utils import timezone
 
 
 class DescricaoRelatorioForm(forms.ModelForm):
@@ -18,20 +19,6 @@ class EditarDescricaoRelatorioForm(forms.ModelForm):
         labels = {'description': 'Descrição de Relatório'}
 
 
-class SetorForm(forms.ModelForm):
-    class Meta:
-        model = Setor
-        fields = ['sector']
-        labels = {'sector': 'Setor'}
-
-
-class ResponsavelForm(forms.ModelForm):
-    class Meta:
-        model = Responsavel
-        fields = ['name']
-        labels = {'name': 'Nome'}
-
-
 class CustomUserChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.fullname
@@ -42,7 +29,7 @@ class RotinaForm(forms.ModelForm):
 
     class Meta:
         model = Rotina
-        fields = ['descricao_relatorio', 'prazo', 'setor', 'responsavel']
+        fields = ['descricao_relatorio', 'prazo', 'responsavel']
         labels = {
             'descricao_relatorio': 'Descrição de Relatório',
             'responsavel': 'Responsável',
@@ -50,6 +37,13 @@ class RotinaForm(forms.ModelForm):
 
 
 class AtualizarStatusRotinaForm(forms.ModelForm):
+
+
     class Meta:
         model = StatusDiarioRotina
-        fields = ['status']
+        fields = ['status', 'data']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'data': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            # Não defina 'initial' aqui
+        }

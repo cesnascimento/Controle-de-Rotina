@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms.app_forms import AtualizarStatusRotinaForm, RotinaForm, DescricaoRelatorioForm, SetorForm, ResponsavelForm
-from .models import Rotina, Descricao_relatorio, Setor, Responsavel, StatusDiarioRotina
+from user_control.models import CustomUser
+from .forms.app_forms import AtualizarStatusRotinaForm, RotinaForm, DescricaoRelatorioForm
+from .models import Rotina, Descricao_relatorio, Setor, StatusDiarioRotina
 from django.utils import timezone
+from datetime import datetime
 
 # Rotina
 
@@ -48,28 +50,23 @@ def listar_rotina(request):
 
 def atualizar_status_rotina(request, pk):
     rotina = get_object_or_404(Rotina, pk=pk, responsavel=request.user)
-    data_atual = timezone.now().date()
 
     # Obter o último status para a data atual, se existir
-    ultimo_status = StatusDiarioRotina.objects.filter(rotina=rotina, data=data_atual).order_by('-id').first()
+    ultimo_status = StatusDiarioRotina.objects.filter(rotina=rotina).order_by('-id').first()
 
     if request.method == 'POST':
         form = AtualizarStatusRotinaForm(request.POST)
         if form.is_valid():
-            # Criar um novo registro de status diário
             novo_status = form.save(commit=False)
             novo_status.rotina = rotina
-            novo_status.data = data_atual
             novo_status.usuario = request.user
             novo_status.save()
 
-            # Opcional: Atualizar o status na tabela Rotina
             rotina.status = novo_status.status
             rotina.save()
             return redirect('minhas_rotinas')
     else:
-        # Inicializar o formulário com o último status, se existir
-        form = AtualizarStatusRotinaForm(instance=ultimo_status)
+        form = AtualizarStatusRotinaForm(initial={'data': timezone.now().date().strftime('%Y-%m-%d')}, instance=ultimo_status)
 
     return render(request, 'app/atualizar_status_rotina.html', {'form': form, 'rotina': rotina})
 
@@ -125,77 +122,42 @@ def list_descricao_relatorio(request):
     descricoes = Descricao_relatorio.objects.all()
     return render(request, 'app/list_descricao_relatorio.html', {'descricoes': descricoes})
 
-# Setor
 
+def gerencia_rotina(request):
+    status_diarios = StatusDiarioRotina.objects.all()
 
-def add_setor(request):
-    if request.method == 'POST':
-        form = SetorForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('list_setor')
-    else:
-        form = SetorForm()
-
-    return render(request, 'app/add_or_edit_setor.html', {'form': form})
-
-
-def edit_setor(request, id):
-    setor = Setor.objects.get(id=id)
-    if request.method == 'POST':
-        form = SetorForm(request.POST, instance=setor)
-        if form.is_valid():
-            form.save()
-            return redirect('')
-    else:
-        form = SetorForm(instance=setor)
-
-    return render(request, 'app/add_or_edit_setor.html', {'form': form})
-
-
-def list_setor(request):
+    responsaveis = CustomUser.objects.all()
     setores = Setor.objects.all()
-    return render(request, 'app/list_setor.html', {'setores': setores})
+    descricoes = Descricao_relatorio.objects.all()
+    prazos = Rotina.objects.values_list('prazo', flat=True).distinct()
 
+    responsavel_query = request.GET.get('responsavel')
+    setor_query = request.GET.get('setor')
+    descricao_query = request.GET.get('descricao')
+    prazo_query = request.GET.get('prazo')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
 
-def delete_setor(request, id):
-    setor = get_object_or_404(Setor, id=id)
-    setor.delete()
-    return redirect('list_setor')
+    if responsavel_query:
+        status_diarios = status_diarios.filter(usuario__id=responsavel_query)
+    if setor_query:
+        status_diarios = status_diarios.filter(rotina__setor__id=setor_query)
+    if descricao_query:
+        status_diarios = status_diarios.filter(rotina__descricao_relatorio__id=descricao_query)
+    if prazo_query:
+        status_diarios = status_diarios.filter(rotina__prazo=prazo_query)
+    if start_date:
+        start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        status_diarios = status_diarios.filter(data__gte=start_date)
+    if end_date:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        status_diarios = status_diarios.filter(data__lte=end_date)
 
-# Responsavel
-
-
-def add_responsavel(request):
-    if request.method == 'POST':
-        form = ResponsavelForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('list_responsavel')
-    else:
-        form = ResponsavelForm()
-
-    return render(request, 'app/add_or_edit_responsavel.html', {'form': form})
-
-
-def edit_responsavel(request, id):
-    responsavel = Responsavel.objects.get(id=id)
-    if request.method == 'POST':
-        form = ResponsavelForm(request.POST, instance=responsavel)
-        if form.is_valid():
-            return redirect('')
-    else:
-        form = ResponsavelForm(instantece=responsavel)
-
-    return render(request, 'app/add_or_edit_setor.html', {'form': form})
-
-
-def list_responsavel(request):
-    responsaveis = Responsavel.objects.all()
-    return render(request, 'app/list_responsavel.html', {'responsaveis': responsaveis})
-
-
-def delete_responsavel(request, id):
-    responsavel = get_object_or_404(Responsavel, id=id)
-    responsavel.delete()
-    return redirect('list_responsavel')
+    return render(request, 'app/gerencia_rotina.html', {
+        'status_diarios': status_diarios,
+        'responsaveis': responsaveis,
+        'setores': setores,
+        'descricoes': descricoes,
+        'prazos': prazos,
+        'status_choices': Rotina.STATUS_CHOICES,
+    })

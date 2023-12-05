@@ -1,7 +1,8 @@
-from .models import CustomUser, UserActivities
+from .models import CustomUser, UserActivities, Setor
 from django.shortcuts import redirect, render, get_object_or_404
-from .forms.usuario_forms import CadastroUsuarioForm, EditarUsuarioForm
+from .forms.usuario_forms import CadastroUsuarioForm, EditarUsuarioForm, SetorForm
 from django.contrib.auth import get_user_model
+
 
 
 def add_user_activity(user, action):
@@ -46,3 +47,39 @@ def deletar_usuario(request, id):
   usuario = User.objects.get(id=id)
   usuario.delete()
   return redirect('listar_usuarios')
+
+
+def add_setor(request):
+    if request.method == 'POST':
+        form = SetorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_setor')
+    else:
+        form = SetorForm()
+
+    return render(request, 'app/add_or_edit_setor.html', {'form': form})
+
+
+def edit_setor(request, id):
+    setor = Setor.objects.get(id=id)
+    if request.method == 'POST':
+        form = SetorForm(request.POST, instance=setor)
+        if form.is_valid():
+            form.save()
+            return redirect('')
+    else:
+        form = SetorForm(instance=setor)
+
+    return render(request, 'app/add_or_edit_setor.html', {'form': form})
+
+
+def list_setor(request):
+    setores = Setor.objects.all()
+    return render(request, 'app/list_setor.html', {'setores': setores})
+
+
+def delete_setor(request, id):
+    setor = get_object_or_404(Setor, id=id)
+    setor.delete()
+    return redirect('list_setor')

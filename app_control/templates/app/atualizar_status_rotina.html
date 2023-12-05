@@ -1,12 +1,38 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 
+{% block extrahead %}
+<style>
+  input[type="date"] {
+      width: 10%; /* Ajuste a largura para ser consistente com outros campos */
+      max-width: 300px; /* Ou ajuste conforme necessário */
+      height: auto; /* Ajuste a altura conforme necessário */
+  }
+  .form-control {
+      width: 10%;  /* Ajusta a largura dos campos */
+      max-width: 300px;  /* Limita a largura máxima dos campos */
+  }
+</style>
+{% endblock %}
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('input, select, textarea').addClass('form-control');
+  });
+</script>
+{% endblock %}
+
+
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 form-group"">
   <h2>Atualizar Status da Rotina</h2>
-  <form method="post">
+  <form method="post" class="form-group">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div class="container mr-5 form-group">
+      {{ form.as_p }}
+    </div>
     <button type="submit" class="btn btn-primary">Atualizar Status</button>
   </form>
 </div>

@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from user_control.models import CustomUser
+from user_control.models import CustomUser, Setor
 from user_control.views import add_user_activity
 
 
@@ -32,66 +32,6 @@ class Descricao_relatorio(models.Model):
 
     def __str__(self):
         return self.description
-
-
-class Setor(models.Model):
-    # created_by = models.ForeignKey(CustomUser, null=True, related_name="user_sector", on_delete=models.SET_NULL)
-    sector = models.CharField(max_length=500, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['id']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.old_sector = self.sector
-
-    def save(self, *args, **kwargs):
-        action = f"Adicionado novo setor - '{self.sector}'"
-        if self.pk is not None:
-            action = f"Atualizado novo setor - '{self.old_sector}' para '{self.sector}'"
-        super().save(*args, **kwargs)
-        # add_user_activity(self.created_by, action=action)
-
-    def delete(self, *args, **kwargs):
-        # created_by = self.created_by
-        action = f"Deletado setor - '{self.sector}'"
-        super().delete(*args, **kwargs)
-        # add_user_activity(created_by, action=action)
-
-    def __str__(self):
-        return self.sector
-
-
-class Responsavel(models.Model):
-    # created_by = models.ForeignKey(CustomUser, null=True, related_name="responavel", on_delete=models.SET_NULL)
-    name = models.CharField(max_length=500, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['id']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.old_name = self.name
-
-    def save(self, *args, **kwargs):
-        action = f"Adicionado novo setor - '{self.name}'"
-        if self.pk is not None:
-            action = f"Atualizado novo setor - '{self.old_name}' para '{self.name}'"
-        super().save(*args, **kwargs)
-        # add_user_activity(self.created_by, action=action)
-
-    def delete(self, *args, **kwargs):
-        # created_by = self.created_by
-        action = f"Deletado setor - '{self.name}'"
-        super().delete(*args, **kwargs)
-        # add_user_activity(created_by, action=action)
-
-    def __str__(self):
-        return self.name
 
 
 class Rotina(models.Model):
@@ -127,6 +67,11 @@ class Rotina(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDENTE')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.responsavel:
+            self.setor = self.responsavel.setor
+        super(Rotina, self).save(*args, **kwargs)
 
 
 class StatusDiarioRotina(models.Model):

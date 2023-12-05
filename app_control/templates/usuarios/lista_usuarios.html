@@ -15,6 +15,7 @@ Listagem de usuários
                 <tr>
                     <th>Nome</th>
                     <th>Email</th>
+                    <th>Setor</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -23,6 +24,7 @@ Listagem de usuários
                     <tr>
                         <td>{{usuario.fullname}}</td>
                         <td>{{usuario.email}}</td>
+                        <td>{{usuario.setor}}</td>
                         <td>
                             <a href="{% url 'editar_usuario' usuario.id %}" class="mr-5"><i class="fa fa-user"></i></a>
                             <a href="{% url 'deletar_usuario' usuario.id %}"><i class="fa fa-trash"></i></a>

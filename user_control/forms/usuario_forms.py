@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
+from ..models import Setor
 
 class CadastroUsuarioForm(UserCreationForm):
     def save(self, commit=True):
@@ -13,7 +14,7 @@ class CadastroUsuarioForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = ['fullname', 'email' ,'password1', 'password2']
+        fields = ['fullname', 'email' , 'setor', 'password1', 'password2']
         labels = {'fullname': 'Nome'}
  
 
@@ -22,6 +23,12 @@ class EditarUsuarioForm(UserChangeForm):
 
     class Meta:
         model = get_user_model()
-        fields = ['fullname', 'email']
+        fields = ['fullname', 'email', 'setor']
         labels = {'fullname': 'Nome'}
 
+
+class SetorForm(forms.ModelForm):
+    class Meta:
+        model = Setor
+        fields = ['sector']
+        labels = {'sector': 'Setor'}

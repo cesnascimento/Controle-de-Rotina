@@ -1,0 +1,113 @@
+<!-- templates/rotinas/list.html -->
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Gerencia de Rotinas</h1>
+
+        <form method="get" class="form-inline mb-4">
+            <select name="responsavel" class="form-control mr-2">
+                <option value="">Responsável</option>
+                {% for responsavel in responsaveis %}
+                    <option value="{{ responsavel.id }}">{{ responsavel.fullname }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="setor" class="form-control mr-2">
+                <option value="">Setor</option>
+                {% for setor in setores %}
+                    <option value="{{ setor.id }}">{{ setor.sector }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="descricao" class="form-control mr-2">
+                <option value="">Descrição</option>
+                {% for descricao in descricoes %}
+                    <option value="{{ descricao.id }}">{{ descricao.description }}</option>
+                {% endfor %}
+            </select>
+            
+            <select name="prazo" class="form-control mr-2">
+                <option value="">Escolha um Prazo</option>
+                {% for prazo in prazos %} <!-- Assumindo que 'prazos' foi passado no contexto -->
+                    <option value="{{ prazo }}">{{ prazo }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="status" class="form-control mr-2">
+                <option value="">Escolha um Status</option>
+                {% for status_value, status_name in status_choices %}
+                    <option value="{{ status_value }}" {% if request.GET.status == status_value %} selected {% endif %}>
+                        {{ status_name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <div>
+            <input type="date" name="start_date" class="form-control mr-2">
+            <input type="date" name="end_date" class="form-control mr-2">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Descrição</th>
+                    <th>Setor</th>
+                    <th>Responsável</th>
+                    <th>Prazo</th>
+                    <th>Status</th>
+                    <th>Data de Execução</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status_diario in status_diarios %}
+                    <tr>
+                        <td>{{ status_diario.rotina.descricao_relatorio }}</td>
+                        <td>{{ status_diario.rotina.setor }}</td>
+                        <td>{{ status_diario.usuario }}</td>
+                        <td>{{ status_diario.rotina.prazo }}</td>
+                        <td class="status-field">{{ status_diario.status }}</td>
+                        <td>{{ status_diario.data|date:"d/m/Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if rotinas.has_other_pages %}
+            <nav>
+                <ul class="pagination">
+                    {% if rotinas.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ rotinas.previous_page_number }}" class="page-link">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in rotinas.paginator.page_range %}
+                        <li class="page-item {% if rotinas.number == num %}active{% endif %}">
+                            <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if rotinas.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{ rotinas.next_page_number }}" class="page-link">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.status-field').forEach((element) => {
+                element.textContent = element.textContent.replace('_', ' ');
+            });
+        });
+    </script>
+        
+{% endblock %}
+

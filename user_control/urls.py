@@ -11,4 +11,9 @@ urlpatterns = [
     path('logout', auth_views.LogoutView.as_view(), name='deslogar_usuario'),
     path('alterar_senha', auth_views.PasswordChangeView.as_view(
         success_url=reverse_lazy('listar_usuarios')), name='alterar_senha'),
+
+    path('setor/add/', add_setor, name='add_setor'),
+    path('setor/edit/<int:id>/', edit_setor, name='edit_setor'),
+    path('setor/delete/<int:id>/', delete_setor, name='delete_setor'),
+    path('setor/list', list_setor, name='list_setor'),
 ]

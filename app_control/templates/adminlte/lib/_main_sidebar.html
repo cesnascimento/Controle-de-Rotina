@@ -16,6 +16,7 @@ Links de navegação
             <p>Rotina</p>
         </a>
     </li>
+    {% if request.user.is_superuser or request.user.is_staff %}
     <li class="nav-item has-tree-view ">
         <a href="#" class="nav-link">
             <i class="nav-icon fas fa fa-user"></i> <p>Usuários</p>
@@ -72,4 +73,5 @@ Links de navegação
                 </li>
         </ul>
     </li>
+    {% endif %}
 {% endblock nav_links %} 

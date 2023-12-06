@@ -36,5 +36,8 @@ Listagem de usuários
     </div>
 
 </div>
-<a href="{% url 'cadastrar_usuario' %}" class="btn btn-primary">Cadastrar</a>
+<a href="{% url 'cadastrar_usuario' %}" class="btn btn-primary">Cadastrar Usuario</a>
+{% if request.user.is_superuser %}
+<a href="{% url 'cadastrar_usuario_administrador' %}" class="btn btn-primary">Cadastrar Administrador</a>
+{% endif %}
 {% endblock content %}

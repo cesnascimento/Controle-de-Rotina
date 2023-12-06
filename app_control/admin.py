@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import Descricao_relatorio, Rotina, StatusDiarioRotina
 
-# Register your models here.
+admin.site.register((Descricao_relatorio, Rotina, StatusDiarioRotina))

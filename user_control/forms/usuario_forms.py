@@ -6,7 +6,21 @@ from ..models import Setor
 class CadastroUsuarioForm(UserCreationForm):
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
-        user.is_superuser = True
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
+
+    class Meta(UserCreationForm.Meta):
+        model = get_user_model()
+        fields = ['fullname', 'email' , 'setor', 'password1', 'password2']
+        labels = {'fullname': 'Nome'}
+
+
+class CadastroUsuarioAdministradorForm(UserCreationForm):
+    def save(self, commit=True):
+        user = super(UserCreationForm, self).save(commit=False)
+        user.is_staff = True
         user.set_password(self.cleaned_data['password1'])
         if commit:
             user.save()

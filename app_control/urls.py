@@ -18,5 +18,5 @@ urlpatterns = [
     path('rotina/atualizar-status/<int:pk>/',
          atualizar_status_rotina, name='atualizar_status_rotina'),
     path('gerencia-rotinas', gerencia_rotina, name='gerencia_rotinas'),
-    path('calendario-rotina', sua_view, name='calendario_rotina'),
+    path('calendario-rotina', calendario_rotina, name='calendario_rotina'),
 ]

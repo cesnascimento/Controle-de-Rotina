@@ -33,14 +33,14 @@ AUTH_USER_MODEL = "user_control.CustomUser"
 # Application definition
 
 INSTALLED_APPS = [
-    'user_control',
-    'app_control',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'user_control',
+    'app_control',
     'adminlte3',
     'bootstrap4',
 
@@ -87,7 +87,7 @@ DATABASES = {
         "USER": "root",
         "PASSWORD": "root",
         "HOST": "127.0.0.1",
-        "PORT": "5434",
+        "PORT": "5432",
     }
 }
 
@@ -128,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_REDIRECT_URL = 'listar_usuarios'
+LOGIN_REDIRECT_URL = 'minhas_rotinas'
 
 LOGOUT_REDIRECT_URL = 'logar_usuario'
 

@@ -4,12 +4,15 @@ from .forms.app_forms import AtualizarStatusRotinaForm, RotinaForm, DescricaoRel
 from .models import Rotina, Descricao_relatorio, Setor, StatusDiarioRotina
 from django.utils import timezone
 from datetime import datetime, timedelta
-import calendar
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 # Rotina
 
-
+@login_required
 def add_rotina(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     if request.method == 'POST':
         form = RotinaForm(request.POST)
         if form.is_valid():
@@ -20,8 +23,10 @@ def add_rotina(request):
 
     return render(request, 'app/add_or_edit_rotina.html', {'form': form})
 
-
+@login_required
 def edit_rotina(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     rotina = Rotina.objects.get(id=id)
     if request.method == 'POST':
         form = RotinaForm(request.POST, instance=rotina)
@@ -33,14 +38,18 @@ def edit_rotina(request, id):
 
     return render(request, 'app/add_or_edit_rotina.html', {'form': form})
 
-
+@login_required
 def delete_rotina(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     rotina = get_object_or_404(Rotina, id=id)
     rotina.delete()
     return redirect('listar_rotina')
 
-
+@login_required
 def listar_rotina(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     rotinas = Rotina.objects.all()
     return render(request, 'app/list_rotina.html', {'rotinas': rotinas})
 
@@ -49,7 +58,7 @@ def listar_rotina(request):
     rotinas = Rotina.objects.all()
     return render(request, 'app/minhas_rotinas.html', {'rotinas': rotinas}) """
 
-
+@login_required
 def atualizar_status_rotina(request, pk):
     rotina = get_object_or_404(Rotina, pk=pk, responsavel=request.user)
 
@@ -74,7 +83,7 @@ def atualizar_status_rotina(request, pk):
 
     return render(request, 'app/atualizar_status_rotina.html', {'form': form, 'rotina': rotina})
 
-
+@login_required
 def minhas_rotinas(request):
     data_atual = timezone.now().date()
     rotinas = Rotina.objects.filter(responsavel=request.user)
@@ -90,8 +99,10 @@ def minhas_rotinas(request):
 
 # Descrição de Relatorio
 
-
+@login_required
 def add_descricao_relatorio(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     if request.method == 'POST':
         form_descricao_relatorio = DescricaoRelatorioForm(request.POST)
         form_descricao_relatorio.fields['description'].label = "Descrição de Relatório"
@@ -106,8 +117,10 @@ def add_descricao_relatorio(request):
 
     return render(request, 'app/add_descricao_relatorio.html', {'form_descricao_relatorio': form_descricao_relatorio})
 
-
+@login_required
 def edit_descricao_relatorio(request, id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     descricao_relatorio = Descricao_relatorio.objects.get(id=id)
     if request.method == 'POST':
         form_descricao_relatorio = DescricaoRelatorioForm(
@@ -121,13 +134,17 @@ def edit_descricao_relatorio(request, id):
 
     return render(request, 'app/add_descricao_relatorio.html', {'form_descricao_relatorio': form_descricao_relatorio, 'descricao_relatorio': descricao_relatorio})
 
-
+@login_required
 def list_descricao_relatorio(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     descricoes = Descricao_relatorio.objects.all()
     return render(request, 'app/list_descricao_relatorio.html', {'descricoes': descricoes})
 
-
+@login_required
 def gerencia_rotina(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     status_diarios = StatusDiarioRotina.objects.all()
 
     responsaveis = CustomUser.objects.all()
@@ -198,8 +215,10 @@ def get_dias_uteis(mes, ano):
         data += timedelta(days=1)
     return dias_do_mes
 
-
-def sua_view(request):
+@login_required
+def calendario_rotina(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
     ano_atual, mes_atual = datetime.now().year, datetime.now().month
     dias_do_mes = get_dias_uteis(mes_atual, ano_atual)
     rotinas = Rotina.objects.all().select_related(

@@ -5,7 +5,7 @@ from user_control.views import add_user_activity
 
 
 class Descricao_relatorio(models.Model):
-    # created_by = models.ForeignKey(CustomUser, null=True, related_name="description", on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(CustomUser, null=True, related_name="description", on_delete=models.SET_NULL)
     description = models.CharField(max_length=500, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -22,7 +22,7 @@ class Descricao_relatorio(models.Model):
         if self.pk is not None:
             action = f"Atualizado nova descrição de relatório - '{self.old_description}' para '{self.description}'"
         super().save(*args, **kwargs)
-        # add_user_activity(self.created_by, action=action)
+        add_user_activity(self.created_by, action=action)
 
     def delete(self, *args, **kwargs):
         created_by = self.created_by

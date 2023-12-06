@@ -3,7 +3,8 @@ from user_control.models import CustomUser
 from .forms.app_forms import AtualizarStatusRotinaForm, RotinaForm, DescricaoRelatorioForm
 from .models import Rotina, Descricao_relatorio, Setor, StatusDiarioRotina
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
+import calendar
 
 # Rotina
 
@@ -48,11 +49,13 @@ def listar_rotina(request):
     rotinas = Rotina.objects.all()
     return render(request, 'app/minhas_rotinas.html', {'rotinas': rotinas}) """
 
+
 def atualizar_status_rotina(request, pk):
     rotina = get_object_or_404(Rotina, pk=pk, responsavel=request.user)
 
     # Obter o último status para a data atual, se existir
-    ultimo_status = StatusDiarioRotina.objects.filter(rotina=rotina).order_by('-id').first()
+    ultimo_status = StatusDiarioRotina.objects.filter(
+        rotina=rotina).order_by('-id').first()
 
     if request.method == 'POST':
         form = AtualizarStatusRotinaForm(request.POST)
@@ -66,7 +69,8 @@ def atualizar_status_rotina(request, pk):
             rotina.save()
             return redirect('minhas_rotinas')
     else:
-        form = AtualizarStatusRotinaForm(initial={'data': timezone.now().date().strftime('%Y-%m-%d')}, instance=ultimo_status)
+        form = AtualizarStatusRotinaForm(initial={'data': timezone.now(
+        ).date().strftime('%Y-%m-%d')}, instance=ultimo_status)
 
     return render(request, 'app/atualizar_status_rotina.html', {'form': form, 'rotina': rotina})
 
@@ -74,14 +78,14 @@ def atualizar_status_rotina(request, pk):
 def minhas_rotinas(request):
     data_atual = timezone.now().date()
     rotinas = Rotina.objects.filter(responsavel=request.user)
-    status = StatusDiarioRotina.objects.filter(rotina__in=rotinas, data=data_atual)
+    status = StatusDiarioRotina.objects.filter(
+        rotina__in=rotinas, data=data_atual)
     # Adicionar lógica para outras periodicidades se necessário
     return render(request, 'app/minhas_rotinas.html',
-        {
-        'rotinas': rotinas, 
-        'status_diarios': status}
-    )
-
+                  {
+                      'rotinas': rotinas,
+                      'status_diarios': status}
+                  )
 
 
 # Descrição de Relatorio
@@ -143,7 +147,8 @@ def gerencia_rotina(request):
     if setor_query:
         status_diarios = status_diarios.filter(rotina__setor__id=setor_query)
     if descricao_query:
-        status_diarios = status_diarios.filter(rotina__descricao_relatorio__id=descricao_query)
+        status_diarios = status_diarios.filter(
+            rotina__descricao_relatorio__id=descricao_query)
     if prazo_query:
         status_diarios = status_diarios.filter(rotina__prazo=prazo_query)
     if start_date:
@@ -160,4 +165,56 @@ def gerencia_rotina(request):
         'descricoes': descricoes,
         'prazos': prazos,
         'status_choices': Rotina.STATUS_CHOICES,
+    })
+
+
+def obter_status_para_data(rotina, dia):
+    # Substitua esta lógica pela sua lógica específica para determinar o status
+    # Por exemplo, você pode verificar se há um objeto de status que corresponde a esta rotina e data
+    status = StatusDiarioRotina.objects.filter(
+        rotina=rotina, data=dia).order_by('-data', '-id').first()
+    if status:
+        status_para_letra = {
+            'PENDENTE': 'A',
+            'REALIZADO_PRAZO': 'R',
+            'PREVISAO_EXECUCAO': 'P',
+            'REALIZADO_FORA_PRAZO': 'F',
+            'INVENTARIO_GERAL': 'I',
+            'JUSTIFICADO': 'J'
+        }
+        # Substitua 'algum_campo_status' pelo campo real do seu modelo
+        return status_para_letra.get(status.status, '')
+    else:
+        # Ou qualquer valor padrão que você deseja mostrar se não houver status
+        return ''
+
+
+def get_dias_uteis(mes, ano):
+    dias_do_mes = []
+    data = datetime(ano, mes, 1)
+    while data.month == mes:
+        if data.weekday() < 5:  # 0-4 são dias de semana (segunda a sexta)
+            dias_do_mes.append(data)
+        data += timedelta(days=1)
+    return dias_do_mes
+
+
+def sua_view(request):
+    ano_atual, mes_atual = datetime.now().year, datetime.now().month
+    dias_do_mes = get_dias_uteis(mes_atual, ano_atual)
+    rotinas = Rotina.objects.all().select_related(
+        'responsavel').order_by('responsavel__fullname', 'created_at')
+
+    rotinas_com_status = []
+    for rotina in rotinas:
+        status_diarios = [obter_status_para_data(
+            rotina, dia) for dia in dias_do_mes]  # Substitua por sua lógica
+        rotinas_com_status.append({
+            'rotina': rotina,
+            'status_diarios': status_diarios
+        })
+
+    return render(request, 'app/seu_template_calendario.html', {
+        'rotinas_com_status': rotinas_com_status,
+        'dias_do_mes': dias_do_mes
     })

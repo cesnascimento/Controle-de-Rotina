@@ -16,12 +16,24 @@ Links de navegação
             <p>Rotina</p>
         </a>
     </li>
-    <li class="nav-item">
-        <a href="{% url 'listar_usuarios' %}" class="nav-link">
-            <i class="nav-icon fa fa-user"></i> 
-            <p>Usuários</p>
+    <li class="nav-item has-tree-view ">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa fa-user"></i> <p>Usuários</p>
+            <p><i class="right fas fa-angle-left"></i>
+            </p>
         </a>
-    </li>
+        <ul class="nav nav-treeview menu-open">
+                <li class="nav-item">
+                        <a href="{% url 'listar_usuarios' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Usuário
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'list_setor' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Setor
+                        </a>
+                </li>
+        </ul>
     <li class="nav-item has-tree-view ">
         <a href="#" class="nav-link">
             <i class="nav-icon fas fa-object-group"></i> <p>Serviços</p>
@@ -39,9 +51,23 @@ Links de navegação
                             <i class="nav-icon fas fa-circle"></i> Descrição de Atividade
                         </a>
                 </li>
+        </ul>
+    </li>
+    <li class="nav-item has-tree-view ">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-object-group"></i> <p>Gerenciamento</p>
+            <p><i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview menu-open">
                 <li class="nav-item">
-                        <a href="{% url 'list_setor' %}" class="nav-link">
-                            <i class="nav-icon fas fa-circle"></i> Cadastrar Setor
+                        <a href="{% url 'gerencia_rotinas' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Gerencia de Rotina
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'calendario_rotina' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Rotina Calendário
                         </a>
                 </li>
         </ul>

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Rotina Geral Calendário</h3>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Responsável</th>
+                    <th>Descrição</th>
+                    <th>Prazo</th>
+                    {% for dia in dias_do_mes %}
+                        <th>{{ dia.day }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in rotinas_com_status %}
+                <tr>
+                    <td>{{ item.rotina.responsavel.fullname }}</td>
+                    <td>{{ item.rotina.descricao_relatorio }}</td>
+                    <td>{{ item.rotina.prazo }}</td>
+                    {% for status in item.status_diarios %}
+                        <td>
+                            <span class="badge {% if status == 'A' %}badge-danger
+                                        {% elif status == 'R' %}badge-success
+                                        {% elif status == 'P' %}badge-secondary
+                                        {% elif status == 'F' %}badge-warning
+                                        {% elif status == 'I' %}badge-info
+                                        {% elif status == 'J' %}badge-primary
+                                        {% endif %}">
+                                {{ status|capfirst }}
+                            </span>
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

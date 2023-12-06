@@ -15,6 +15,8 @@ urlpatterns = [
     path('rotina/delete/<int:id>/', delete_rotina, name='delete_rotina'),
     path('rotina/list', listar_rotina, name='listar_rotina'),
     path('minhas-rotinas/', minhas_rotinas, name='minhas_rotinas'),
-    path('rotina/atualizar-status/<int:pk>/', atualizar_status_rotina, name='atualizar_status_rotina'),
+    path('rotina/atualizar-status/<int:pk>/',
+         atualizar_status_rotina, name='atualizar_status_rotina'),
     path('gerencia-rotinas', gerencia_rotina, name='gerencia_rotinas'),
+    path('calendario-rotina', sua_view, name='calendario_rotina'),
 ]

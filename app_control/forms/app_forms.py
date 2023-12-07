@@ -38,6 +38,14 @@ class RotinaForm(forms.ModelForm):
 
 class AtualizarStatusRotinaForm(forms.ModelForm):
 
+    STATUS_CHOICES = (
+        ('REALIZADO', 'Realizado'),
+        ('INVENTARIO_GERAL', 'Inventário Geral'),
+        ('JUSTIFICADO', 'Justificado'),
+    )
+
+    status = forms.ChoiceField(
+        choices=STATUS_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = StatusDiarioRotina

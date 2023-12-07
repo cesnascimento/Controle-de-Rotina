@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-
 {% block extrahead %}
 <style>
   input[type="date"] {
@@ -19,10 +18,21 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
   $(document).ready(function() {
+    // Adiciona classe 'form-control' a todos os inputs, selects e textareas
     $('input, select, textarea').addClass('form-control');
+  });
+
+  $(window).on('load', function() {
+    // Remove opções indesejadas do campo de status
+    $('#id_status option').each(function() {
+      if (!['', 'PENDENTE', 'REALIZADO_PRAZO'].includes($(this).val())) {
+        $(this).remove();
+      }
+    });
   });
 </script>
 {% endblock %}
+
 
 
 {% block content %}

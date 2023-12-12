@@ -258,8 +258,6 @@ def calendario_rotina(request):
     if prazo_query:
         rotinas = rotinas.filter(prazo=prazo_query)
 
-    prazo_query = request.GET.get('prazo')
-    print("Prazo Query:", prazo_query)
 
     rotinas_com_status = []
     for rotina in rotinas:

@@ -1,11 +1,13 @@
 import os
 import django
 from django.utils import timezone
-from app_control.models import Rotina, StatusDiarioRotina
 import datetime
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 django.setup()
+
+from app_control.models import Rotina, StatusDiarioRotina
+
 
 def quinto_dia_util(ano, mes):
     contador_dias_uteis = 0
@@ -19,9 +21,10 @@ def quinto_dia_util(ano, mes):
 
     return datetime.date(ano, mes, dia - 1)
 
+
 def atualizar_criar_registro(prazo, hoje):
-    rotinas = Rotina.objects.filter(prazo=prazo)  
-    for rotina in rotinas: 
+    rotinas = Rotina.objects.filter(prazo=prazo)
+    for rotina in rotinas:
         rotina.status = 'PENDENTE'
         rotina.save()
 
@@ -31,7 +34,9 @@ def atualizar_criar_registro(prazo, hoje):
             status='PENDENTE',
         )
         nova_rotina_status.save()
-        print(f"Novo registro criado para a rotina {rotina.id} com status 'Pendente' e data atual")
+        print(
+            f"Novo registro criado para a rotina {rotina.id} com status 'Pendente' e data atual")
+
 
 def prazo_registros():
     hoje = timezone.now().date()
@@ -42,7 +47,8 @@ def prazo_registros():
         return
 
     quinto_dia_util_atual = quinto_dia_util(hoje.year, hoje.month)
-    prazos_semana = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira']
+    prazos_semana = ['Segunda-feira', 'Terça-feira',
+                     'Quarta-feira', 'Quinta-feira', 'Sexta-feira']
 
     prazos_a_atualizar = ['Diário']
     if dia_da_semana < 5:
@@ -52,6 +58,7 @@ def prazo_registros():
 
     for prazo in prazos_a_atualizar:
         atualizar_criar_registro(prazo, hoje)
+
 
 if __name__ == "__main__":
     prazo_registros()

@@ -16,7 +16,7 @@
             <p>Prazo: {{ rotina.get_prazo_display }}</p>
             <p>Status: <span class="badge {% with rotina.status as status %}
               {% if status == 'PENDENTE' %}badge-danger
-              {% elif status == 'REALIZADO_PRAZO' %}badge-success
+              {% elif status == 'REALIZADO' %}badge-success
               {% elif status == 'PREVISAO_EXECUCAO' %}badge-secondary
               {% elif status == 'REALIZADO_FORA_PRAZO' %}badge-warning
               {% elif status == 'INVENTARIO_GERAL' %}badge-info

@@ -33,14 +33,15 @@ AUTH_USER_MODEL = "user_control.CustomUser"
 # Application definition
 
 INSTALLED_APPS = [
+    'user_control',
+    'app_control',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_control',
-    'app_control',
+    'corsheaders',
     'adminlte3',
     'bootstrap4',
 
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'

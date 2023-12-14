@@ -37,7 +37,7 @@
 
 {% block content %}
 <div class="container mt-4 form-group"">
-  <h2>Atualizar Status da Rotina</h2>
+  <h2>Atualizar Status da Rotina: {{ rotina.descricao_relatorio }}</h2>
   <form method="post" class="form-group">
     {% csrf_token %}
     <div class="container mr-5 form-group">

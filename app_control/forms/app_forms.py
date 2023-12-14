@@ -26,13 +26,18 @@ class CustomUserChoiceField(ModelChoiceField):
 
 class RotinaForm(forms.ModelForm):
     responsavel = CustomUserChoiceField(queryset=CustomUser.objects.all())
+    data_mensal = forms.DateField(
+        required=False, 
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
 
     class Meta:
         model = Rotina
-        fields = ['descricao_relatorio', 'prazo', 'responsavel']
+        fields = ['descricao_relatorio', 'prazo', 'responsavel', 'data_mensal']
         labels = {
             'descricao_relatorio': 'Descrição de Relatório',
             'responsavel': 'Responsável',
+            'data_mensal': 'Data Mensal'
         }
 
 

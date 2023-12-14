@@ -29,7 +29,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class Setor(models.Model):
-    sector = models.CharField(max_length=500)
+    sector = models.CharField(max_length=500, unique=True)
 
     def __str__(self):
         return self.sector

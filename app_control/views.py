@@ -151,6 +151,13 @@ def list_descricao_relatorio(request):
     descricoes = Descricao_relatorio.objects.all()
     return render(request, 'app/list_descricao_relatorio.html', {'descricoes': descricoes})
 
+def delete_descricao_relatorio(request, id):
+    if not request.user.is_staff:
+            return HttpResponseForbidden("Acesso negado. Você precisa ser administrador.")
+    descricao = get_object_or_404(Descricao_relatorio, id=id)
+    descricao.delete()
+    return redirect('list_descricao_relatorio')
+
 
 @login_required
 def gerencia_rotina(request):

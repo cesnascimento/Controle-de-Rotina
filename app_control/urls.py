@@ -8,6 +8,8 @@ urlpatterns = [
          edit_descricao_relatorio, name='edit_descricao_relatorio'),
     path('descricao_relatorio/list/', list_descricao_relatorio,
          name='list_descricao_relatorio'),
+    path('descricao_relatorio/delete/<int:id>', delete_descricao_relatorio,
+         name='delete_descricao_relatorio'),
 
 
     path('rotina/add/', add_rotina, name='add_rotina'),

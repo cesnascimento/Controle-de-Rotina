@@ -45,14 +45,14 @@ class Rotina(models.Model):
         ('Quinta-Feira', 'Quinta-Feira'),
         ('Sexta-Feira', 'Sexta-Feira'),
         ('5° Dia Util', '5° Dia Util'),
+        ('15 Dias', '15 Dias'),
+        ('Mensal', 'Mensal'),
     )
     STATUS_CHOICES = (
         ('PENDENTE', 'Pendente'),
         ('REALIZADO', 'Realizado'),
         ('PREVISAO_EXECUCAO', 'Previsão de Execução'),
         ('REALIZADO_FORA_PRAZO', 'Realizado Fora do Prazo'),
-        ('INVENTARIO_GERAL', 'Inventário Geral'),
-        ('JUSTIFICADO', 'Justificado'),
     )
 
     created_by = models.ForeignKey(
@@ -61,6 +61,7 @@ class Rotina(models.Model):
         Descricao_relatorio, on_delete=models.CASCADE, related_name='rotinas')
     prazo = models.CharField(
         max_length=15, choices=SITUACOES, default='Diário')
+    data_mensal = models.DateField(null=True, blank=True)
     setor = models.ForeignKey(
         Setor, on_delete=models.CASCADE, related_name='setor')
     responsavel = models.ForeignKey(
@@ -72,6 +73,8 @@ class Rotina(models.Model):
 
     def save(self, *args, **kwargs):
         if self.responsavel:
+            if self.prazo != 'Mensal':
+                self.data_mensal = None
             self.setor = self.responsavel.setor
         super(Rotina, self).save(*args, **kwargs)
 
@@ -86,4 +89,4 @@ class StatusDiarioRotina(models.Model):
         CustomUser, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.rotina.descricao_relatorio} - {self.data} - {self.status}"
+        return f"{self.rotina.descricao_relatorio} - {self.data} - {self.status} por {self.rotina.responsavel}"

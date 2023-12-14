@@ -20,7 +20,7 @@
                         <td>{{descricao.description}}</td>                        
                         <td>
                             <a href="{% url 'edit_descricao_relatorio' descricao.id %}" class="mr-5"><i class="fa fa-cog"></i></a>
-                            <a href="#"><i class="fa fa-trash"></i></a>
+                            <a href="{% url 'delete_descricao_relatorio' descricao.id %}"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

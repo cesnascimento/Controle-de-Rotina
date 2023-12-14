@@ -25,13 +25,13 @@ def quinto_dia_util(ano, mes):
 def atualizar_criar_registro(prazo, hoje):
     rotinas = Rotina.objects.filter(prazo=prazo)
     for rotina in rotinas:
-        rotina.status = 'PENDENTE'
+        rotina.status = 'PREVISAO_EXECUCAO'
         rotina.save()
 
         nova_rotina_status = StatusDiarioRotina(
             rotina=rotina,
             data=hoje,
-            status='PENDENTE',
+            status='PREVISAO_EXECUCAO',
         )
         nova_rotina_status.save()
         print(

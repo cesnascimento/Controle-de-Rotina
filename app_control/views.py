@@ -221,7 +221,7 @@ def obter_status_para_data(rotina, dia):
         }
         return status_para_letra.get(status.status, '')
     else:
-        return 'P'
+        return ''
 
 
 def get_dias_uteis(mes, ano):

@@ -206,6 +206,18 @@ def gerencia_rotina(request):
         'status_choices': Rotina.STATUS_CHOICES,
     })
 
+def quinto_dia_util(mes, ano):
+    dia = 1
+    dias_uteis = 0
+    while dias_uteis < 5:
+        data_atual = datetime(ano, mes, dia)
+        # Segunda-feira = 0, Domingo = 6
+        if data_atual.weekday() < 5:  # Segunda a sexta
+            dias_uteis += 1
+        if dias_uteis == 5:
+            return data_atual
+        dia += 1
+
 
 def obter_status_para_data(rotina, dia):
     status = StatusDiarioRotina.objects.filter(
@@ -221,7 +233,19 @@ def obter_status_para_data(rotina, dia):
         }
         return status_para_letra.get(status.status, '')
     else:
-        if rotina.prazo == 'Diário':
+        dias_da_semana = {
+            0: 'Segunda-Feira',
+            1: 'Terça-feira',
+            2: 'Quarta-Feira',
+            3: 'Quinta-Feira',
+            4: 'Sexta-Feira',
+        }
+        dia_da_semana = dia.weekday()
+        quinto_dia_util_do_mes = quinto_dia_util(dia.month, dia.year)
+
+        if (rotina.prazo == 'Diário' or 
+            rotina.prazo == dias_da_semana.get(dia_da_semana) or
+            (rotina.prazo == '5° Dia Util' and dia == quinto_dia_util_do_mes.date())):
             return 'P'
         else:
             return ''

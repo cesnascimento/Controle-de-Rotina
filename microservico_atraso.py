@@ -38,7 +38,7 @@ def atualizar_status_dia_anterior():
 
     # Atualiza rotinas semanais e do '5° Dia Útil' da semana anterior se necessário
     dia_semana_anterior = hoje - datetime.timedelta(days=7)
-    prazos_semana = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira']
+    prazos_semana = ['Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira']
     prazo_semana_anterior = prazos_semana[dia_semana_anterior.weekday()]
     atualizar_status_rotinas(prazo_semana_anterior, dia_semana_anterior)
 

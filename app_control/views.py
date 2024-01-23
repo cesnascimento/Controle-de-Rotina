@@ -206,10 +206,39 @@ def gerencia_rotina(request):
         'status_choices': Rotina.STATUS_CHOICES,
     })
 
+def quinto_dia_util(mes, ano):
+    dia = 1
+    dias_uteis = 0
+    while dias_uteis < 5:
+        data_atual = datetime(ano, mes, dia)
+        # Segunda-feira = 0, Domingo = 6
+        if data_atual.weekday() < 5:  # Segunda a sexta
+            dias_uteis += 1
+        if dias_uteis == 5:
+            return data_atual
+        dia += 1
+
+
+def e_data_correspondente(rotina, dia):
+    # Verifica se a data corresponde à data_mensal ou 15 dias após
+    if rotina.prazo in ['Mensal', '15 Dias'] and rotina.data_mensal:
+        if rotina.prazo == 'Mensal':
+            print('aqui data correspondnte', rotina.data_mensal)
+            return dia.date() == rotina.data_mensal
+        elif rotina.prazo == '15 Dias':
+            print('aqui data correspondnte', rotina.data_mensal)
+            data_15_dias = rotina.data_mensal + timedelta(days=15)
+            # Ajusta para o próximo mês se necessário
+            if data_15_dias.month != rotina.data_mensal.month:
+                data_15_dias = data_15_dias.replace(month=rotina.data_mensal.month + 1, day=1)
+            return dia.date() == rotina.data_mensal or dia.date() == data_15_dias
+    print('aqui data correspondnte', rotina.data_mensal)
+    return False
 
 def obter_status_para_data(rotina, dia):
     status = StatusDiarioRotina.objects.filter(
         rotina=rotina, data=dia).order_by('-data', '-id').first()
+
     if status:
         status_para_letra = {
             'PENDENTE': 'A',
@@ -221,7 +250,24 @@ def obter_status_para_data(rotina, dia):
         }
         return status_para_letra.get(status.status, '')
     else:
-        return 'P'
+        dias_da_semana = {
+            0: 'Segunda-Feira',
+            1: 'Terça-feira',
+            2: 'Quarta-Feira',
+            3: 'Quinta-Feira',
+            4: 'Sexta-Feira',
+        }
+        dia_da_semana = dia.weekday()
+        quinto_dia_util_do_mes = quinto_dia_util(dia.month, dia.year)
+
+        # Verifica se a data corresponde à rotina diária, semanal ou no 5° dia útil do mês
+        if (rotina.prazo == 'Diário' or 
+            rotina.prazo == dias_da_semana.get(dia_da_semana) or
+            (rotina.prazo == '5° Dia Util' and dia.date() == quinto_dia_util_do_mes.date())):
+            return 'P'
+        return ''
+        
+
 
 
 def get_dias_uteis(mes, ano):

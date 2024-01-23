@@ -73,7 +73,7 @@ class Rotina(models.Model):
 
     def save(self, *args, **kwargs):
         if self.responsavel:
-            if self.prazo != 'Mensal':
+            if self.prazo != 'Mensal' or '15 Dias':
                 self.data_mensal = None
             self.setor = self.responsavel.setor
         super(Rotina, self).save(*args, **kwargs)

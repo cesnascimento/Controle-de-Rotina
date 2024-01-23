@@ -5,6 +5,7 @@ cycler==0.12.1
 Django==4.2.7
 django-adminlte3==0.1.6
 django-bootstrap4==23.2
+django-cors-headers==4.3.1
 fonttools==4.46.0
 kiwisolver==1.4.5
 matplotlib==3.8.2

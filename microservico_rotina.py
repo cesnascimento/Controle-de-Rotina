@@ -47,8 +47,8 @@ def prazo_registros():
         return
 
     quinto_dia_util_atual = quinto_dia_util(hoje.year, hoje.month)
-    prazos_semana = ['Segunda-feira', 'Terça-feira',
-                     'Quarta-feira', 'Quinta-feira', 'Sexta-feira']
+    prazos_semana = ['Segunda-Feira', 'Terça-Feira',
+                     'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira']
 
     prazos_a_atualizar = ['Diário']
     if dia_da_semana < 5:

@@ -61,6 +61,7 @@
                     <th>Prazo</th>
                     <th>Status</th>
                     <th>Data de Execução</th>
+                    <th>Arquivo</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,6 +73,13 @@
                         <td>{{ status_diario.rotina.prazo }}</td>
                         <td class="status-field">{{ status_diario.status }}</td>
                         <td>{{ status_diario.data|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if status_diario.arquivo %}
+                                <a href="{{ status_diario.arquivo.url }}" target="_blank">Visualizar</a>
+                            {% else %}
+                                Sem arquivo
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -54,7 +54,7 @@ class AtualizarStatusRotinaForm(forms.ModelForm):
 
     class Meta:
         model = StatusDiarioRotina
-        fields = ['status', 'data']
+        fields = ['status', 'data', 'arquivo']
         widgets = {
             'status': forms.Select(attrs={'class': 'form-control'}),
             'data': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),

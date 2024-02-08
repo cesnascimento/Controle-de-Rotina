@@ -67,7 +67,7 @@ def atualizar_status_rotina(request, pk):
         rotina=rotina).order_by('-id').first()
 
     if request.method == 'POST':
-        form = AtualizarStatusRotinaForm(request.POST)
+        form = AtualizarStatusRotinaForm(request.POST, request.FILES)
         if form.is_valid():
             novo_status = form.save(commit=False)
             novo_status.rotina = rotina

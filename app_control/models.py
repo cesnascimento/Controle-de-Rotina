@@ -87,6 +87,7 @@ class StatusDiarioRotina(models.Model):
         max_length=20, choices=Rotina.STATUS_CHOICES, default='PENDENTE')
     usuario = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, null=True)
+    arquivo = models.FileField(upload_to='rotinas_arquivos/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.rotina.descricao_relatorio} - {self.data} - {self.status} por {self.rotina.responsavel}"

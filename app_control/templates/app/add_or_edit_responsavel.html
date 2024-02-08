@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="card card-primary">
+  <div class="card-header">
+    <div class="card-title">
+      {% if request.resolver_match.url_name == 'add_responsavel' %}
+      Cadastrar Responsável
+      {% else %}
+      Editar responsável
+      {% endif %}
+    </div>
+  </div>
+  <div class="card-body">
+    <form method="POST">
+      {% csrf_token %} 
+      {% bootstrap_form form %}
+      <button class="btn btn-primary" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}

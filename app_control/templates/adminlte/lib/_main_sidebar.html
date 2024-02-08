@@ -1,0 +1,83 @@
+{% extends 'adminlte/lib/_main_sidebar.html' %} 
+
+{% block logo %}
+<a href="#" class="brand-link">
+{% block logo_text %}
+<span class="brand-text font-weight-light"> Controle de Rotina </span>
+{% endblock logo_text %} 
+</a>
+{% endblock logo %}
+
+{% block user_panel %}
+{% endblock user_panel %}
+
+
+{%block nav_heading%} 
+Links de navegação 
+{%endblock nav_heading%}
+{% block nav_links %}
+    <li class="nav-item">
+        <a href="{% url 'minhas_rotinas' %}" class="nav-link">
+            <i class="nav-icon fa fa-cog"></i> 
+            <p>Rotina</p>
+        </a>
+    </li>
+    {% if request.user.is_superuser or request.user.is_staff %}
+    <li class="nav-item has-tree-view ">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa fa-user"></i> <p>Usuários</p>
+            <p><i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview menu-open">
+                <li class="nav-item">
+                        <a href="{% url 'listar_usuarios' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Usuário
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'list_setor' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Setor
+                        </a>
+                </li>
+        </ul>
+    <li class="nav-item has-tree-view ">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-object-group"></i> <p>Serviços</p>
+            <p><i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview menu-open">
+                <li class="nav-item">
+                        <a href="{% url 'listar_rotina' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Cadastrar Rotina
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'list_descricao_relatorio' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Descrição de Atividade
+                        </a>
+                </li>
+        </ul>
+    </li>
+    <li class="nav-item has-tree-view ">
+        <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-object-group"></i> <p>Gerenciamento</p>
+            <p><i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview menu-open">
+                <li class="nav-item">
+                        <a href="{% url 'gerencia_rotinas' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Gerencia de Rotina
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{% url 'calendario_rotina' %}" class="nav-link">
+                            <i class="nav-icon fas fa-circle"></i> Rotina Calendário
+                        </a>
+                </li>
+        </ul>
+    </li>
+    {% endif %}
+{% endblock nav_links %} 

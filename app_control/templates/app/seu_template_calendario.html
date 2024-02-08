@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Rotina Geral Calendário</h3>
+    </div>
+    <form method="get" class="form-inline mb-4">
+        <div class="form-group">
+            <label for="responsavel">Responsável:</label>
+            <select name="responsavel" id="responsavel" class="form-control mr-2">
+                <option value="">Selecione um Responsável</option>
+                {% for responsavel in responsaveis %}
+                <option value="{{ responsavel.id }}">{{ responsavel.fullname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="descricao">Descrição:</label>
+            <select name="descricao" id="descricao" class="form-control mr-2">
+                <option value="">Selecione uma Descrição</option>
+                {% for descricao in descricoes %}
+                <option value="{{ descricao.id }}">{{ descricao.description }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="setor">Setor:</label>
+            <select name="setor" id="setor" class="form-control mr-2">
+                <option value="">Selecione um Setor</option>
+                {% for setor in setores %}
+                <option value="{{ setor.id }}">{{ setor.sector }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="prazo">Prazo:</label>
+            <select name="prazo" id="prazo" class="form-control mr-2">
+                <option value="">Selecione um prazo</option>
+                {% for prazo in prazos %}
+                <option value="{{ prazo }}">{{ prazo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+
+    </form>
+    <div class="card-body p-0">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Responsável</th>
+                    <th>Descrição</th>
+                    <th>Prazo</th>
+                    {% for dia in dias_do_mes %}
+                        <th>{{ dia.day }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in rotinas_com_status %}
+                <tr>
+                    <td>{{ item.rotina.responsavel.fullname }}</td>
+                    <td>{{ item.rotina.descricao_relatorio }}</td>
+                    <td>{{ item.rotina.prazo }}</td>
+                    {% for status in item.status_diarios %}
+                        <td>
+                            <span class="badge {% if status == 'A' %}badge-danger
+                                        {% elif status == 'R' %}badge-success
+                                        {% elif status == 'P' %}badge-secondary
+                                        {% elif status == 'F' %}badge-warning
+                                        {% elif status == 'I' %}badge-info
+                                        {% elif status == 'J' %}badge-primary
+                                        {% endif %}">
+                                {{ status|capfirst }}
+                            </span>
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

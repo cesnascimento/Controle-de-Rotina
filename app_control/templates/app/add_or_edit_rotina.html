@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="card card-primary">
+  <div class="card-header">
+    <div class="card-title">
+      {% if request.resolver_match.url_name == 'add_rotina' %}
+      Cadastrar Rotina
+      {% else %}
+      Editar Rotina
+      {% endif %}
+    </div>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        {% if field.name != 'data_mensal' %}
+          {% bootstrap_field field %}
+        {% endif %}
+      {% endfor %}
+
+      <div id="div_id_data_mensal" style="display: none;">
+        {% bootstrap_field form.data_mensal %}
+      </div>
+
+      <button class="btn btn-primary" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var prazoSelect = document.getElementById("id_prazo");
+      var dataMensalDiv = document.getElementById("div_id_data_mensal");
+
+      function toggleDataMensal() {
+          if (prazoSelect.value === "Mensal" || prazoSelect.value === "15 Dias") {
+              dataMensalDiv.style.display = "block";
+          } else {
+              dataMensalDiv.style.display = "none";
+          }
+      }
+
+      // Inicializa na carga da página
+      toggleDataMensal();
+
+      // Atualiza ao mudar a seleção
+      prazoSelect.addEventListener("change", toggleDataMensal);
+  });
+</script>
+{% endblock content %}
